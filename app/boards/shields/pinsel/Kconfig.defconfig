@@ -1,0 +1,26 @@
+# Copyright (c) 2020 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+if SHIELD_PINSEL_LEFT
+
+config ZMK_KEYBOARD_NAME
+    default "Pinsel Left"
+
+endif
+
+if SHIELD_PINSEL_RIGHT
+
+config ZMK_KEYBOARD_NAME
+    default "Pinsel Right"
+
+endif
+
+if SHIELD_PINSEL_RIGHT || SHIELD_PINSEL_LEFT
+
+config ZMK_USB
+    default y
+
+config ZMK_SPLIT
+    default y
+
+endif
