@@ -1,0 +1,13 @@
+# Draculady board configuration
+
+# Copyright (c) 2020 @MangoIV
+# SPDX-License-Identifier: MIT
+
+
+config BOARD_DRACULADY_RIGHT
+	bool "draculady_right"
+	depends on SOC_NRF52840_QIAA
+
+config BOARD_DRACULADY_LEFT
+	bool "draculady_left"
+	depends on SOC_NRF52840_QIAA
