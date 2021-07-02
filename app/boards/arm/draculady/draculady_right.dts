@@ -12,6 +12,10 @@
         ;
 };
 
+&right_encoder {
+    status = "okay";
+};
+
 &transform {
     col-offset = <5>;
 };
