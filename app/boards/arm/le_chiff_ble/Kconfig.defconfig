@@ -31,6 +31,9 @@ config ZMK_USB
 config ZMK_BATTERY_VOLTAGE_DIVIDER
 	default y
 
+config ZMK_DISPLAY
+    default y
+
 if ZMK_DISPLAY
 
 config I2C
@@ -38,6 +41,10 @@ config I2C
 
 config SSD1306
 	default y
+
+config SSD1306_REVERSE_MODE
+	default y
+
 
 endif # ZMK_DISPLAY
 
@@ -63,4 +70,5 @@ choice LVGL_COLOR_DEPTH
 endchoice
 
 endif # LVGL
+
 endif # BOARD_LE_CHIFF_BLE
