@@ -164,8 +164,7 @@ __syscall int behavior_sensor_keymap_binding_triggered(struct zmk_behavior_bindi
                                                        int64_t timestamp);
 
 static inline int
-z_impl_behavior_sensor_keymap_binding_triggered(struct zmk_behavior_binding *binding,
-                                                const struct device *sensor, int64_t timestamp) {
+z_impl_behavior_sensor_keymap_binding_triggered(struct zmk_behavior_binding *binding, const struct sensor_value value, int64_t timestamp) {
     const struct device *dev = device_get_binding(binding->behavior_dev);
 
     if (dev == NULL) {
