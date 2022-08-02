@@ -160,7 +160,7 @@ static inline int z_impl_behavior_keymap_binding_released(struct zmk_behavior_bi
  * @retval Negative errno code if failure.
  */
 __syscall int behavior_sensor_keymap_binding_triggered(struct zmk_behavior_binding *binding,
-                                                       const struct device *sensor,
+                                                       const struct sensor_value value,
                                                        int64_t timestamp);
 
 static inline int
