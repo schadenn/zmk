@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <drivers/sensor.h>
 #include <zephyr/types.h>
 #include <stddef.h>
 #include <zephyr/sys/util.h>
@@ -266,7 +267,11 @@ z_impl_behavior_sensor_keymap_binding_process(struct zmk_behavior_binding *bindi
         return -ENOTSUP;
     }
 
+<<<<<<< HEAD
     return api->sensor_binding_process(binding, event, mode);
+=======
+    return api->sensor_binding_triggered(binding, value, timestamp);
+>>>>>>> 24b0a882 (Update behavior.h)
 }
 
 /**
