@@ -215,6 +215,7 @@ int send_sensor_state() {
 }
 
 int zmk_split_bt_sensor_triggered(uint8_t sensor_number, struct sensor_value value) {
+    LOG_DBG("sensor_number %d", sensor_number);
     sensor_event.sensor_number = sensor_number;
     sensor_event.value = value;
     return send_sensor_state();
