@@ -226,10 +226,12 @@ static int sticky_key_keycode_state_changed_listener(const zmk_event_t *eh) {
             if (sticky_key->timer_started) {
                 stop_timer(sticky_key);
                 if (sticky_key->config->quick_release) {
-                    // continue processing the event. Release the sticky key afterwards.
-                    ZMK_EVENT_RAISE_AFTER(eh, behavior_sticky_key);
+                    // immediately release the sticky key after the key press is handled.
+                    if (!event_reraised) {
+                        ZMK_EVENT_RAISE_AFTER(eh, behavior_sticky_key);
+                        event_reraised = true;
+                    }
                     release_sticky_key_behavior(sticky_key, ev->timestamp);
-                    return ZMK_EV_EVENT_CAPTURED;
                 }
             }
             sticky_key->modified_key_usage_page = ev->usage_page;
@@ -285,8 +287,8 @@ static struct behavior_sticky_key_data behavior_sticky_key_data;
         .ignore_modifiers = DT_INST_PROP(n, ignore_modifiers),                                     \
         .quick_release = DT_INST_PROP(n, quick_release),                                           \
     };                                                                                             \
-    DEVICE_DT_INST_DEFINE(n, behavior_sticky_key_init, device_pm_control_nop,                      \
-                          &behavior_sticky_key_data, &behavior_sticky_key_config_##n, APPLICATION, \
+    DEVICE_DT_INST_DEFINE(n, behavior_sticky_key_init, NULL, &behavior_sticky_key_data,            \
+                          &behavior_sticky_key_config_##n, APPLICATION,                            \
                           CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_sticky_key_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(KP_INST)

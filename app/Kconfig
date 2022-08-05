@@ -243,6 +243,13 @@ config ZMK_RGB_UNDERGLOW_ON_START
 	bool "RGB underglow starts on by default"
 	default y
 
+config ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE
+	bool "Turn off RGB underglow when keyboard goes into idle state"
+
+config ZMK_RGB_UNDERGLOW_AUTO_OFF_USB
+	bool "Turn off RGB underglow when USB is disconnected"
+	depends on USB_DEVICE_STACK
+
 #ZMK_RGB_UNDERGLOW
 endif
 
@@ -290,11 +297,7 @@ config ZMK_SLEEP
 
 if ZMK_SLEEP
 
-choice SYS_PM_POLICY
-	default PM_POLICY_APP
-endchoice
-
-config DEVICE_POWER_MANAGEMENT
+config PM_DEVICE
 	default y
 
 config ZMK_IDLE_SLEEP_TIMEOUT
