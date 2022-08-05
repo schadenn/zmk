@@ -350,13 +350,6 @@ static int il0323_controller_init(const struct device *dev) {
         return -EIO;
     }
 
-<<<<<<< HEAD
-    if (il0323_clear_and_write_buffer(dev, 0xff, false)) {
-        return -1;
-    }
-
-=======
->>>>>>> fc511e40cc1a274473a753c959f8d7e5fcc317d0
     return 0;
 }
 
@@ -432,8 +425,4 @@ static struct display_driver_api il0323_driver_api = {
 };
 
 DEVICE_DT_INST_DEFINE(0, il0323_init, NULL, &il0323_driver, NULL, POST_KERNEL,
-<<<<<<< HEAD
                       CONFIG_APPLICATION_INIT_PRIORITY, &il0323_driver_api);
-=======
-                      CONFIG_APPLICATION_INIT_PRIORITY, &il0323_driver_api);
->>>>>>> fc511e40cc1a274473a753c959f8d7e5fcc317d0
