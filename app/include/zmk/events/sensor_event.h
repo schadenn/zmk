@@ -17,4 +17,3 @@ struct zmk_sensor_event {
 };
 
 ZMK_EVENT_DECLARE(zmk_sensor_event);
-q
