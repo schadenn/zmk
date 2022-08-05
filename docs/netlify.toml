@@ -15,7 +15,16 @@
   from = "https://www.zmkfirmware.dev/*"
   to = "https://www.zmk.dev/:splat"
 <<<<<<< HEAD
+<<<<<<< HEAD
   force = true
 =======
   force = true
 >>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
+=======
+  force = true
+
+[[headers]]
+  for = "/hardware-metadata.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+>>>>>>> fc511e40cc1a274473a753c959f8d7e5fcc317d0

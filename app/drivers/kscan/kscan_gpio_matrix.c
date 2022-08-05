@@ -250,6 +250,10 @@ static int kscan_matrix_read(const struct device *dev) {
             LOG_ERR("Failed to set output %i inactive: %i", o, err);
             return err;
         }
+
+#if CONFIG_ZMK_KSCAN_MATRIX_WAIT_BETWEEN_OUTPUTS > 0
+        k_busy_wait(CONFIG_ZMK_KSCAN_MATRIX_WAIT_BETWEEN_OUTPUTS);
+#endif
     }
 
     // Process the new state.
@@ -455,10 +459,9 @@ static const struct kscan_driver_api kscan_matrix_api = {
         .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                                         \
         .diode_direction = INST_DIODE_DIR(n),                                                      \
     };                                                                                             \
-    DEVICE_DT_INST_DEFINE(n, kscan_gpio_init_##n, device_pm_control_nop, &kscan_gpio_data_##n,     \
-                          &kscan_gpio_config_##n, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY,   \
-                          &gpio_driver_api_##n);
-
-DT_INST_FOREACH_STATUS_OKAY(GPIO_INST_INIT)
+                                                                                                   \
+    DEVICE_DT_INST_DEFINE(n, &kscan_matrix_init, NULL, &kscan_matrix_data_##n,                     \
+                          &kscan_matrix_config_##n, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY, \
+                          &kscan_matrix_api);
 
 DT_INST_FOREACH_STATUS_OKAY(KSCAN_MATRIX_INIT);

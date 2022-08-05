@@ -3,9 +3,7 @@ title: Troubleshooting
 sidebar_title: Troubleshooting
 ---
 
-### Summary
-
-The following page provides suggestions for common errors that may occur during firmware compilation. If the information provided is insufficient to resolve the issue, feel free to seek out help from the [ZMK Discord](https://zmk.dev/community/discord/invite).
+The following page provides suggestions for common errors that may occur during firmware compilation or other issues with keyboard usage. If the information provided is insufficient to resolve the issue, feel free to seek out help from the [ZMK Discord](https://zmk.dev/community/discord/invite).
 
 ### File Transfer Error
 
@@ -27,6 +25,7 @@ Variations of the warnings shown below occur when flashing the `<firmware>.uf2` 
 
 An error along the lines of `CMake Error at (zmk directory)/zephyr/cmake/generic_toolchain.cmake:64 (include): include could not find load file:` during firmware compilation indicates that the Zephyr Environment Variables are not properly defined.
 For more information, click [here](../docs/development/setup.md#environment-variables).
+<<<<<<< HEAD
 
 ### West Build Errors
 
@@ -46,6 +45,27 @@ devicetree error: /__w/zmk-config/zmk-config/config/cradio.keymap:109 (column 4)
 
 #### devicetree_unfixed.h error
 
+=======
+
+### West Build Errors
+
+West build errors usually indicate syntax problems in the `<keyboard>.keymap` file during the compilation process. The following are some examples and root causes.
+
+:::note
+If you are reviewing these errors in the GitHub Actions tab, they can be found in the `West Build` step of the build process.
+:::
+
+#### devicetree error
+
+A `devicetree error` followed by a reference to the line number on `<keyboard>.keymap` refers to an issue at the exact line position in that file. For example, below error message indicates a missing `;` at line 109 of the `cradio.keymap` file:
+
+```
+devicetree error: /__w/zmk-config/zmk-config/config/cradio.keymap:109 (column 4): parse error: expected ';' or ','
+```
+
+#### devicetree_unfixed.h error
+
+>>>>>>> fc511e40cc1a274473a753c959f8d7e5fcc317d0
 A `devicetree_unfixed.h` error that follows with an "undeclared here" string indicates a problem with key bindings, like behavior nodes (e.g. `&kp` or `&mt`) with incorrect number of parameters:
 
 ```
@@ -61,9 +81,15 @@ Key positions are numbered starting from `0` at the top left key on the keymap, 
 ### Split Keyboard Halves Unable to Pair
 
 Split keyboard halves pairing issue can be resolved by flashing a settings reset firmware to both controllers. You will first need to acquire the reset UF2 image file with one of the following options:
+<<<<<<< HEAD
 
 #### Option 1: Build Reset UF2 in 'zmk-config'
 
+=======
+
+#### Option 1: Build Reset UF2 in 'zmk-config'
+
+>>>>>>> fc511e40cc1a274473a753c959f8d7e5fcc317d0
 Find the `build.yaml` file in your `zmk-config` folder and add an additional settings reset build for the board used by your split keyboard. For example assuming that the config repo is setup for nice!nano v2 with Corne, append the `settings_reset` shield to the `build.yaml` file as follows:
 
 ```yml

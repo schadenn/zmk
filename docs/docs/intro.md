@@ -14,6 +14,7 @@ ZMK is currently missing some features found in other popular firmware. This tab
 | Legend: | ✅ Supported | 🚧 Under Development | 💡 Planned |
 | :------ | :----------- | :------------------- | :--------- |
 
+<<<<<<< HEAD
 | **Feature**                                                                                                               | ZMK | BlueMicro | QMK |
 | ------------------------------------------------------------------------------------------------------------------------- | :-: | :-------: | :-: |
 | Low Latency BLE Support                                                                                                   | ✅  |    ✅     |     |
@@ -41,6 +42,8 @@ ZMK is currently missing some features found in other popular firmware. This tab
 | AVR/8 Bit                                                                                                                 |     |           | ✅  |
 | [Wide Range of ARM Chips Supported](https://docs.zephyrproject.org/latest/boards/index.html)                              | ✅  |           |     |
 
+=======
+>>>>>>> fc511e40cc1a274473a753c959f8d7e5fcc317d0
 | **Feature**                                                                                                                        | ZMK | BlueMicro | QMK |
 | ---------------------------------------------------------------------------------------------------------------------------------- | :-: | :-------: | :-: |
 | Low Latency BLE Support                                                                                                            | ✅  |    ✅     |     |

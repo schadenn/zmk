@@ -320,68 +320,37 @@ static const struct kscan_driver_api kscan_direct_api = {
     .disable_callback = kscan_direct_disable,
 };
 
-#define KSCAN_DIRECT_INPUT_ITEM(i, n)                                                              \
-    {                                                                                              \
-        .label = DT_INST_GPIO_LABEL_BY_IDX(n, input_gpios, i),                                     \
-        .pin = DT_INST_GPIO_PIN_BY_IDX(n, input_gpios, i),                                         \
-        .flags = DT_INST_GPIO_FLAGS_BY_IDX(n, input_gpios, i),                                     \
-    },
+#define KSCAN_DIRECT_INIT(n)                                                                       \
+    BUILD_ASSERT(INST_DEBOUNCE_PRESS_MS(n) <= DEBOUNCE_COUNTER_MAX,                                \
+                 "ZMK_KSCAN_DEBOUNCE_PRESS_MS or debounce-press-ms is too large");                 \
+    BUILD_ASSERT(INST_DEBOUNCE_RELEASE_MS(n) <= DEBOUNCE_COUNTER_MAX,                              \
+                 "ZMK_KSCAN_DEBOUNCE_RELEASE_MS or debounce-release-ms is too large");             \
+                                                                                                   \
+    static const struct gpio_dt_spec kscan_direct_inputs_##n[] = {                                 \
+        UTIL_LISTIFY(INST_INPUTS_LEN(n), KSCAN_DIRECT_INPUT_CFG_INIT, n)};                         \
+                                                                                                   \
+    static struct debounce_state kscan_direct_state_##n[INST_INPUTS_LEN(n)];                       \
+                                                                                                   \
+    COND_INTERRUPTS(                                                                               \
+        (static struct kscan_direct_irq_callback kscan_direct_irqs_##n[INST_INPUTS_LEN(n)];))      \
+                                                                                                   \
+    static struct kscan_direct_data kscan_direct_data_##n = {                                      \
+        .pin_state = kscan_direct_state_##n, COND_INTERRUPTS((.irqs = kscan_direct_irqs_##n, ))};  \
+                                                                                                   \
+    static struct kscan_direct_config kscan_direct_config_##n = {                                  \
+        .inputs = KSCAN_GPIO_LIST(kscan_direct_inputs_##n),                                        \
+        .debounce_config =                                                                         \
+            {                                                                                      \
+                .debounce_press_ms = INST_DEBOUNCE_PRESS_MS(n),                                    \
+                .debounce_release_ms = INST_DEBOUNCE_RELEASE_MS(n),                                \
+            },                                                                                     \
+        .debounce_scan_period_ms = DT_INST_PROP(n, debounce_scan_period_ms),                       \
+        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                                         \
+        .toggle_mode = DT_INST_PROP(n, toggle_mode),                                               \
+    };                                                                                             \
+                                                                                                   \
+    DEVICE_DT_INST_DEFINE(n, &kscan_direct_init, NULL, &kscan_direct_data_##n,                     \
+                          &kscan_direct_config_##n, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY, \
+                          &kscan_direct_api);
 
-#define INST_INPUT_LEN(n) DT_INST_PROP_LEN(n, input_gpios)
-
-#define GPIO_INST_INIT(n)                                                                          \
-    COND_CODE_0(IS_ENABLED(CONFIG_ZMK_KSCAN_DIRECT_POLLING),                                       \
-                (static struct kscan_gpio_irq_callback irq_callbacks_##n[INST_INPUT_LEN(n)];), ()) \
-    static struct kscan_gpio_data kscan_gpio_data_##n = {                                          \
-        .inputs = {[INST_INPUT_LEN(n) - 1] = NULL}};                                               \
-    static int kscan_gpio_init_##n(const struct device *dev) {                                     \
-        struct kscan_gpio_data *data = dev->data;                                                  \
-        const struct kscan_gpio_config *cfg = dev->config;                                         \
-        int err;                                                                                   \
-        const struct device **input_devices = kscan_gpio_input_devices(dev);                       \
-        for (int i = 0; i < cfg->num_of_inputs; i++) {                                             \
-            const struct kscan_gpio_item_config *in_cfg = &kscan_gpio_input_configs(dev)[i];       \
-            input_devices[i] = device_get_binding(in_cfg->label);                                  \
-            if (!input_devices[i]) {                                                               \
-                LOG_ERR("Unable to find input GPIO device");                                       \
-                return -EINVAL;                                                                    \
-            }                                                                                      \
-            err = gpio_pin_configure(input_devices[i], in_cfg->pin, GPIO_INPUT | in_cfg->flags);   \
-            if (err) {                                                                             \
-                LOG_ERR("Unable to configure pin %d on %s for input", in_cfg->pin, in_cfg->label); \
-                return err;                                                                        \
-            }                                                                                      \
-            COND_CODE_0(                                                                           \
-                IS_ENABLED(CONFIG_ZMK_KSCAN_DIRECT_POLLING),                                       \
-                (irq_callbacks_##n[i].work = &data->work; irq_callbacks_##n[i].dev = dev;          \
-                 irq_callbacks_##n[i].debounce_period = cfg->debounce_period;                      \
-                 gpio_init_callback(&irq_callbacks_##n[i].callback,                                \
-                                    kscan_gpio_irq_callback_handler, BIT(in_cfg->pin));            \
-                 err = gpio_add_callback(input_devices[i], &irq_callbacks_##n[i].callback);        \
-                 if (err) {                                                                        \
-                     LOG_ERR("Error adding the callback to the column device");                    \
-                     return err;                                                                   \
-                 }),                                                                               \
-                ())                                                                                \
-        }                                                                                          \
-        data->dev = dev;                                                                           \
-        COND_CODE_1(IS_ENABLED(CONFIG_ZMK_KSCAN_DIRECT_POLLING),                                   \
-                    (k_timer_init(&data->poll_timer, kscan_gpio_timer_handler, NULL);), ())        \
-        if (cfg->debounce_period > 0) {                                                            \
-            k_delayed_work_init(&data->work.delayed, kscan_gpio_work_handler);                     \
-        } else {                                                                                   \
-            k_work_init(&data->work.direct, kscan_gpio_work_handler);                              \
-        }                                                                                          \
-        return 0;                                                                                  \
-    }                                                                                              \
-    static const struct kscan_gpio_config kscan_gpio_config_##n = {                                \
-        .inputs = {UTIL_LISTIFY(INST_INPUT_LEN(n), KSCAN_DIRECT_INPUT_ITEM, n)},                   \
-        .num_of_inputs = INST_INPUT_LEN(n),                                                        \
-        .debounce_period = DT_INST_PROP(n, debounce_period)};                                      \
-    DEVICE_DT_INST_DEFINE(n, kscan_gpio_init_##n, device_pm_control_nop, &kscan_gpio_data_##n,     \
-                          &kscan_gpio_config_##n, POST_KERNEL, CONFIG_ZMK_KSCAN_INIT_PRIORITY,     \
-                          &gpio_driver_api);
-
-DT_INST_FOREACH_STATUS_OKAY(GPIO_INST_INIT)
-
-#endif /* DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT) */
+DT_INST_FOREACH_STATUS_OKAY(KSCAN_DIRECT_INIT);
