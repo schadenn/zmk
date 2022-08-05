@@ -14,4 +14,8 @@
 [[redirects]]
   from = "https://www.zmkfirmware.dev/*"
   to = "https://www.zmk.dev/:splat"
+<<<<<<< HEAD
   force = true
+=======
+  force = true
+>>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be

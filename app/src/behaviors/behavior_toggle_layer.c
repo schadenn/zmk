@@ -44,8 +44,14 @@ static const struct behavior_tog_config behavior_tog_config = {};
 static struct behavior_tog_data behavior_tog_data;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 DEVICE_DT_INST_DEFINE(0, behavior_tog_init, NULL, &behavior_tog_data, &behavior_tog_config,
                       APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_tog_driver_api);
+=======
+DEVICE_DT_INST_DEFINE(0, behavior_tog_init, device_pm_control_nop, &behavior_tog_data,
+                      &behavior_tog_config, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+                      &behavior_tog_driver_api);
+>>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
 =======
 DEVICE_DT_INST_DEFINE(0, behavior_tog_init, device_pm_control_nop, &behavior_tog_data,
                       &behavior_tog_config, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,

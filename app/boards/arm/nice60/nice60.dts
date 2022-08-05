@@ -79,7 +79,11 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	vbatt: vbatt {
+=======
+	vbatt {
+>>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
 =======
 	vbatt {
 >>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
@@ -128,7 +132,10 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
 		spi-one-frame = <0x70>;
 		spi-zero-frame = <0x40>;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
+=======
+>>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
 =======
 >>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
 	};
@@ -137,10 +144,13 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
 &usbd {
 	status = "okay";
 <<<<<<< HEAD
+<<<<<<< HEAD
 	cdc_acm_uart: cdc_acm_uart {
 		compatible = "zephyr,cdc-acm-uart";
 		label = "CDC_ACM_0";
 	};
+=======
+>>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
 =======
 >>>>>>> 6d105f324b25dc71f1a44c7d7efcb1ff5c2ee4be
 };
