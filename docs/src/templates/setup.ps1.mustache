@@ -58,96 +58,49 @@ catch [System.Management.Automation.CommandNotFoundException] {
 Test-Git-Config -Option "user.name" -ErrMsg "Git username not set!`nRun: git config --global user.name 'My Name'"
 Test-Git-Config -Option "user.email" -ErrMsg "Git email not set!`nRun: git config --global user.email 'example@myemail.com'"
 
-function Test-CommandExists {
-    param ($command)
+$permission = (Get-Acl $pwd).Access | 
+?{$_.IdentityReference -match $env:UserName `
+	-and $_.FileSystemRights -match "FullControl" `
+		-or $_.FileSystemRights -match "Write"	} | 
+			
+		Select IdentityReference,FileSystemRights
 
-    $oldPreference = $ErrorActionPreference
-    $ErrorActionPreference = "stop"
-
-    try {
-        if(Get-Command $command){ return $true }
-    } Catch { return $false }
-    Finally { $ErrorActionPreference=$oldPreference }
+If (-Not $permission){
+    Write-Host "Sorry, you do not have write permissions in this directory."
+    Write-Host "Please try running this script again from a directory that you do have write permissions for."
+    exit 1
 }
 
-if (Test-CommandExists Get-Acl) {
-    $permission = (Get-Acl $pwd).Access |
-    ?{$_.IdentityReference -match $env:UserName `
-        -and $_.FileSystemRights -match "FullControl" `
-        -or $_.FileSystemRights -match "Write" } | 
-             Select IdentityReference,FileSystemRights
-
-    If (-Not $permission){
-        Write-Host "Sorry, you do not have write permissions in this directory."
-        Write-Host "Please try running this script again from a directory that you do have write permissions for."
-        exit 1
-    }
-}
-
-$repo_path = "https://github.com/zmkfirmware/unified-zmk-config-template.git"
+$repo_path = "https://github.com/zmkfirmware/zmk-config-split-template.git"
 
 $title = "ZMK Config Setup:"
+$prompt = "Pick an MCU board"
+$options = "nice!nano v1", "nice!nano v2", "QMK Proton-C", "BlueMicro840 (v1)", "makerdiary nRF52840 M.2"
+$boards = "nice_nano", "nice_nano_v2", "proton_c", "bluemicro840_v1", "nrf52840_m2"
+
+Write-Host "$title"
+Write-Host ""
+Write-Host "MCU Board Selection:"
+
+$choice = Get-Choice-From-Options -Options $options -Prompt $prompt
+$board = $($boards[$choice])
+
 Write-Host ""
 Write-Host "Keyboard Shield Selection:"
 $prompt = "Pick a keyboard"
 
-$keyboards = [ordered]@{
-    {{#keyboards}}
-    "{{id}}" = @{
-        name = "{{{name}}}";
-        type = "{{type}}";
-        basedir = "{{__base_dir}}";
-        split = "{{split}}";
-        arch = "{{arch}}";
-        siblings = {{#siblings.0}}@(
-            {{#siblings}}
-            "{{.}}"
-            {{/siblings}}
-            ){{/siblings.0}}{{^siblings.0}}( "{{id}}" ){{/siblings.0}};
-    }
-    {{/keyboards}}
-}
 # TODO: Add support for "Other" and linking to docs on adding custom shields in user config repos.
+$options = "Kyria", "Lily58", "Corne", "Splitreus62", "Sofle", "Iris", "Reviung41", "RoMac", "RoMac+", "makerdiary M60", "Microdox", "TG4X", "QAZ", "NIBBLE", "Jorne", "Jian", "CRBN", "Tidbit", "Eek!", "BFO-9000", "Helix"
+$names = "kyria", "lily58", "corne", "splitreus62", "sofle", "iris", "reviung41", "romac", "romac_plus", "m60", "microdox", "tg4x", "qaz", "nibble", "jorne", "jian", "crbn", "tidbit", "eek", "bfo9000", "helix"
+$splits = "y", "y", "y", "y", "y", "y", "n", "n", "n", "n", "y", "n", "n", "n", "y", "y", "n", "n", "n", "n", "y"
 
-$choice = Get-Choice-From-Options -Options ($keyboards.values | % { $_['name'] }) -Prompt $prompt
-$keyboard = $($($keyboards.keys)[$choice])
-$keyboard_title = $keyboards[$keyboard].name
-$basedir = $keyboards[$keyboard].basedir
-$keyboard_split = $keyboards[$keyboard].split
-$keyboard_arch = $keyboards[$keyboard].arch
-$keyboard_siblings = $keyboards[$keyboard].siblings
-$keyboard_type = $keyboards[$keyboard].type
+$choice = Get-Choice-From-Options -Options $options -Prompt $prompt
+$shield_title = $($options[$choice])
+$shield = $($names[$choice])
+$split = $($splits[$choice])
 
-if ($keyboard_type -eq "shield") {
-    $prompt = "Pick an MCU board"
-    $boards = [ordered]@{
-        {{#boards}}
-        {{id}} = "{{{name}}}";
-        {{/boards}}
-    }
-    $boards_usb_only = [ordered]@{
-        {{#boards}}
-        {{id}} = "{{usb_only}}";
-        {{/boards}}
-    }
-
-    Write-Host "$title"
-    Write-Host ""
-    Write-Host "MCU Board Selection:"
-
-    $choice = Get-Choice-From-Options -Options $boards.values -Prompt $prompt
-
-    if ($keyboard_split -eq "true" -and $($($boards_usb_only.values)[$choice]) -eq "true") {
-        Write-Host "Wired split is not yet supported by ZMK."
-        exit 1
-    }
-    
-    $shields = $keyboard_siblings
-    $board = $($($boards.keys)[$choice])
-    $boards = ( $board )
-} else {
-    $boards = ( $keyboard_siblings )
-    $shields = @( )
+if ($split -eq "n") {
+    $repo_path = "https://github.com/zmkfirmware/zmk-config-template.git"
 }
 
 $copy_keymap = Read-Host "Copy in the stock keymap for customisation? [Yn]"
@@ -178,12 +131,8 @@ else {
 
 Write-Host ""
 Write-Host "Preparing a user config for:"
-if ($keyboard_type -eq "shield") {
-    Write-Host "* MCU Board: ${boards}"
-    Write-Host "* Shield(s): ${shields}"
-} else {
-    Write-Host "* Board(s): ${boards}"
-}
+Write-Host "* MCU Board: ${board}"
+Write-Host "* Shield: ${shield}"
 
 if ($copy_keymap -eq "yes") {
     Write-Host "* Copy Keymap?: Yes"
@@ -209,42 +158,23 @@ Set-Location "$repo_name"
 
 Push-Location config
 
-$config_file = "${keyboard}.conf"
-$keymap_file = "${keyboard}.keymap"
-
-if ($keyboard_type -eq "shield") {
-    $config_url = "https://raw.githubusercontent.com/zmkfirmware/zmk/main/app/boards/shields/${basedir}/${keyboard}.conf"
-    $keymap_url = "https://raw.githubusercontent.com/zmkfirmware/zmk/main/app/boards/shields/${basedir}/${keyboard}.keymap"
-} else {
-    $config_url = "https://raw.githubusercontent.com/zmkfirmware/zmk/main/app/boards/${keyboard_arch}/${basedir}/${keyboard}.conf"
-    $keymap_url = "https://raw.githubusercontent.com/zmkfirmware/zmk/main/app/boards/${keyboard_arch}/${basedir}/${keyboard}.keymap"
-}
-
-Write-Host "Downloading config file (${config_url})"
-Try {
-    Invoke-RestMethod -Uri "${config_url}" -OutFile "${config_file}"
-} Catch {
-    Set-Content -Path $config_file "# Place configuration items here"
-}
+Invoke-RestMethod -Uri "https://raw.githubusercontent.com/zmkfirmware/zmk/main/app/boards/shields/${shield}/${shield}.conf" -OutFile "${shield}.conf"
 
 if ($copy_keymap -eq "yes") {
-    Write-Host "Downloading keymap file (${keymap_url})"
-    Invoke-RestMethod -Uri "${keymap_url}" -OutFile "${keymap_file}"
+    Invoke-RestMethod -Uri "https://raw.githubusercontent.com/zmkfirmware/zmk/main/app/boards/shields/${shield}/${shield}.keymap" -OutFile "${shield}.keymap"
 }
 
 Pop-Location
 
-Add-Content -Path "build.yaml" -Value "include:"
-foreach ($b in ${boards}) {
-    if ($keyboard_type -eq "shield") {
-        foreach ($s in ${shields}) {
-            Add-Content -Path "build.yaml" -Value "  - board: $b"
-            Add-Content -Path "build.yaml" -Value "    shield: $s"
-        }
-    } else {
-        Add-Content -Path "build.yaml" -Value "  - board: $b"
-    }
+$build_file = (Get-Content .github/workflows/build.yml).replace("BOARD_NAME", $board)
+$build_file = $build_file.replace("SHIELD_NAME", $shield)
+$build_file = $build_file.replace("KEYBOARD_TITLE", $shield_title)
+
+if ($board -eq "proton_c") {
+    $build_file = $build_file.replace("uf2", "hex")
 }
+
+Set-Content -Path .github/workflows/build.yml -Value $build_file
 
 Remove-Item -Recurse -Force .git
 git init .

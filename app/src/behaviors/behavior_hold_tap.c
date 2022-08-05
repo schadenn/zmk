@@ -534,7 +534,7 @@ static int on_hold_tap_binding_pressed(struct zmk_behavior_binding *binding,
     // if this behavior was queued we have to adjust the timer to only
     // wait for the remaining time.
     int32_t tapping_term_ms_left = (hold_tap->timestamp + cfg->tapping_term_ms) - k_uptime_get();
-    k_work_schedule(&hold_tap->work, K_MSEC(tapping_term_ms_left));
+    k_delayed_work_submit(&hold_tap->work, K_MSEC(tapping_term_ms_left));
 
     return ZMK_BEHAVIOR_OPAQUE;
 }
@@ -702,9 +702,9 @@ static int behavior_hold_tap_init(const struct device *dev) {
         .hold_trigger_key_positions = DT_INST_PROP(n, hold_trigger_key_positions),                 \
         .hold_trigger_key_positions_len = DT_INST_PROP_LEN(n, hold_trigger_key_positions),         \
     };                                                                                             \
-    DEVICE_DT_INST_DEFINE(n, behavior_hold_tap_init, NULL, NULL, &behavior_hold_tap_config_##n,    \
-                          APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                        \
-                          &behavior_hold_tap_driver_api);
+    DEVICE_DT_INST_DEFINE(n, behavior_hold_tap_init, device_pm_control_nop,                        \
+                          &behavior_hold_tap_data, &behavior_hold_tap_config_##n, APPLICATION,     \
+                          CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_hold_tap_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(KP_INST)
 

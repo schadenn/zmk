@@ -244,7 +244,7 @@ static int ble_save_profile() {
 }
 
 int zmk_ble_prof_select(uint8_t index) {
-    if (index >= ZMK_BLE_PROFILE_COUNT) {
+    if (index >= PROFILE_COUNT) {
         return -ERANGE;
     }
 

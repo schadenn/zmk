@@ -27,8 +27,6 @@ module.exports = {
       "behaviors/hold-tap",
       "behaviors/mod-tap",
       "behaviors/mod-morph",
-      "behaviors/macros",
-      "behaviors/key-toggle",
       "behaviors/sticky-key",
       "behaviors/sticky-layer",
       "behaviors/tap-dance",
