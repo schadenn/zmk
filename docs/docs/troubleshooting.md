@@ -3,7 +3,9 @@ title: Troubleshooting
 sidebar_title: Troubleshooting
 ---
 
-The following page provides suggestions for common errors that may occur during firmware compilation or other issues with keyboard usage. If the information provided is insufficient to resolve the issue, feel free to seek out help from the [ZMK Discord](https://zmk.dev/community/discord/invite).
+### Summary
+
+The following page provides suggestions for common errors that may occur during firmware compilation. If the information provided is insufficient to resolve the issue, feel free to seek out help from the [ZMK Discord](https://zmk.dev/community/discord/invite).
 
 ### File Transfer Error
 

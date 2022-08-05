@@ -54,27 +54,6 @@ This setting is enabled by default. It ensures that if a sticky key modifier is 
 };
 ```
 
-This configuration would apply to all sticky keys. This may not be appropriate if using `quick-release` as you'll lose the ability to chain sticky key modifiers. A better approach for this use case would be to create a new behavior:
-
-```
-/ {
-    behaviors {
-      skq: sticky_key_quick_release {
-        compatible = "zmk,behavior-sticky-key";
-        label = "STICKY_KEY_QUICK_RELEASE";
-        #binding-cells = <1>;
-        bindings = <&kp>;
-        release-after-ms = <1000>;
-        quick-release;
-      };
-    };
-
-    keymap {
-        ...
-    };
-};
-```
-
 ### Advanced usage
 
 Sticky keys can be combined; if you tap `&sk LCTRL` and then `&sk LSHIFT` and then `&kp A`, the output will be ctrl+shift+a.

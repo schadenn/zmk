@@ -20,6 +20,10 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    googleAnalytics: {
+      trackingID: "UA-145201102-2",
+      anonymizeIP: true,
+    },
     // sidebarCollapsible: false,
     navbar: {
       title: "ZMK Firmware",

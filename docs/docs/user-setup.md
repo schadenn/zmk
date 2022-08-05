@@ -82,7 +82,7 @@ bash -c "$(wget https://zmk.dev/setup.sh -O -)" '' --wget
 <TabItem value="PowerShell">
 
 ```
-powershell -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://zmk.dev/setup.ps1'))"
+iex ((New-Object System.Net.WebClient).DownloadString('https://zmk.dev/setup.ps1'))
 ```
 
 </TabItem>

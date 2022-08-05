@@ -8,19 +8,19 @@
 #include "nice_nano.dtsi"
 
 / {
-	chosen {
-		zmk,battery = &vbatt;
-	};
-
 	ext-power {
 		compatible = "zmk,ext-power-generic";
 		label = "EXT_POWER";
 		control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-		init-delay-ms = <50>;
+		init-delay-ms = <10>;
 	};
 
-	vbatt: vbatt {
-		compatible = "zmk,battery-nrf-vddh";
+	vbatt {
+		compatible = "zmk,battery-voltage-divider";
 		label = "BATTERY";
+		io-channels = <&adc (0x0D - 1)>;
+		// Multiply ADC result by 5
+		full-ohms = <5>;
+		output-ohms = <1>;
 	};
 };

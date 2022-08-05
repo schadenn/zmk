@@ -290,7 +290,11 @@ config ZMK_SLEEP
 
 if ZMK_SLEEP
 
-config PM_DEVICE
+choice SYS_PM_POLICY
+	default PM_POLICY_APP
+endchoice
+
+config DEVICE_POWER_MANAGEMENT
 	default y
 
 config ZMK_IDLE_SLEEP_TIMEOUT
