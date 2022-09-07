@@ -86,7 +86,7 @@ static void thread_code(void *p1, void *p2, void *p3)
     int result;
 
     /* PIM447 trackball initialization. */
-        LOG_DBG("PIM447 trackball initialization.");
+        LOG_ERR("PIM447 trackball initialization.");
 
     const char *label = DT_LABEL(DT_INST(0, pimoroni_trackball_pim447));
     dev = device_get_binding(label);
@@ -101,7 +101,7 @@ static void thread_code(void *p1, void *p2, void *p3)
     bool button_release_sent = false;
 
     while (true) {
-        LOG_ERR("pim event loop");
+        LOG_DBG("pim event loop");
         struct sensor_value pos_dx, pos_dy, pos_dz;
         bool send_report = false;
         int clear = PIM447_NONE;

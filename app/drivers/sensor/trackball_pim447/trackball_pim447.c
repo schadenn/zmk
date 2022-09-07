@@ -38,7 +38,7 @@ static int trackball_pim447_read_reg(const struct device *dev,
 
     int status = i2c_reg_read_byte(data->i2c_dev, DT_INST_REG_ADDR(0),
                                    reg, value);
-    LOG_DBG("read pimoroni");
+    LOG_ERR("read pimoroni");
     if (status < 0) {
         LOG_ERR("Sensor reg read byte failed");
         return status;
@@ -144,7 +144,7 @@ static int trackball_pim447_channel_get(const struct device *dev,
 static int trackball_pim447_init(const struct device *dev)
 {
     struct trackball_pim447_data *data = dev->data;
-    LOG_ERR("initializing pimoroni");
+    LOG_DBG("initializing pimoroni");
 
     data->i2c_dev = device_get_binding(DT_INST_BUS_LABEL(0));
     if (data->i2c_dev == NULL) {

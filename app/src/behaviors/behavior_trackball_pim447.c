@@ -21,13 +21,13 @@ struct config {
 };
 
 static int behavior_trackball_pim447_init(const struct device *dev) { 
-    LOG_DBG("PIM BEHAVIOR INIT");
+    LOG_ERR("PIM BEHAVIOR INIT");
     return 0;
 };
 
 static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
-    LOG_DBG("on_keymap_binding_pressed");
+    LOG_ERR("on_keymap_binding_pressed");
     const struct device *device = device_get_binding(binding->behavior_dev);
     const struct config *config = device->config;
 
@@ -38,7 +38,7 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
 
 static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
                                       struct zmk_behavior_binding_event event) {
-    LOG_DBG("on_keymap_binding_pressed");
+    LOG_ERR("on_keymap_binding_pressed");
     const struct device *device = device_get_binding(binding->behavior_dev);
     const struct config *config = device->config;
 
