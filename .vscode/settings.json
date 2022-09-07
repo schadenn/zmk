@@ -1,7 +1,10 @@
 {
   "files.associations": {
     "*.overlay": "dts",
-    "*.keymap": "dts"
+    "*.keymap": "dts",
+    "trackball_pim447.h": "c"
   },
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "cmake.sourceDirectory": "${workspaceFolder}/app",
+  "C_Cpp.errorSquiggles": "Enabled"
 }
