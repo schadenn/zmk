@@ -9,7 +9,7 @@
 #include <drivers/i2c.h>
 #include <drivers/sensor.h>
 #include <logging/log.h>
-LOG_MODULE_REGISTER(PIM, CONFIG_ZMK_LOG_LEVEL);
+LOG_MODULE_REGISTER(trackball_pim447, CONFIG_ZMK_LOG_LEVEL);
 
 #define TRACKBALL_PIM447_REG_LEFT   0x04
 #define TRACKBALL_PIM447_REG_RIGHT  0x05
@@ -162,6 +162,6 @@ static const struct sensor_driver_api trackball_pim447_api = {
     .channel_get  = trackball_pim447_channel_get,
 };
 
-DEVICE_DT_INST_DEFINE(0, trackball_pim447_init, NULL,
+DEVICE_DT_INST_DEFINE(0, &trackball_pim447_init, NULL,
                       &trackball_pim447_data, NULL, POST_KERNEL,
                       CONFIG_SENSOR_INIT_PRIORITY, &trackball_pim447_api);
