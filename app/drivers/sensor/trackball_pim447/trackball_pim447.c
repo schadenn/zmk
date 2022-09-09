@@ -9,7 +9,7 @@
 #include <drivers/i2c.h>
 #include <drivers/sensor.h>
 #include <logging/log.h>
-LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
+LOG_MODULE_REGISTER(PIM, CONFIG_ZMK_LOG_LEVEL);
 
 #define TRACKBALL_PIM447_REG_LEFT   0x04
 #define TRACKBALL_PIM447_REG_RIGHT  0x05
