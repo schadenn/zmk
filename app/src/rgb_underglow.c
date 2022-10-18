@@ -257,7 +257,7 @@ static void zmk_rgb_underglow_effect_status() {
         );
         battery_hsb.b = zmk_battery_state_of_charge();
   
-        for(i = 0; i<STRIP_NUM_PIXELS; i++) {
+        for(int i = 0; i<STRIP_NUM_PIXELS; i++) {
           pixels[i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
         }
     #endif
