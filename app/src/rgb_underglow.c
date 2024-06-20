@@ -184,7 +184,21 @@ static void zmk_rgb_underglow_effect_spectrum(void) {
 }
 
 static void zmk_rgb_underglow_effect_swirl(void) {
-    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+    struct zmk_led_hsb hsb = state.color;
+    hsb.b = 0;
+
+    struct zmk_led_hsb battery_hsb = state.color;
+    battery_hsb.h = hue_scale_to_range(
+        zmk_battery_state_of_charge(),
+        100,
+        CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_COLOR_MIN,
+        CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_COLOR_MAX
+    );
+    battery_hsb.b = zmk_battery_state_of_charge();
+
+    pixels[0] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
+
+    for (int i = 1; i < STRIP_NUM_PIXELS; i++) {
         struct zmk_led_hsb hsb = state.color;
         hsb.h = (HUE_MAX / STRIP_NUM_PIXELS * i + state.animation_step) % HUE_MAX;
 
@@ -200,9 +214,9 @@ static void zmk_rgb_underglow_effect_status() {
     hsb.b = 0;
 
     // Turn off all LEDs
-    for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-        pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
-    }
+    // for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
+    //     pixels[i] = hsb_to_rgb(hsb_scale_zero_max(hsb));
+    // }
 
     // and turn on specific ones.
 
