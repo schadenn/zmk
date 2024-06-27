@@ -277,26 +277,27 @@ static void zmk_rgb_underglow_effect_status() {
         uint8_t batteryChargeLevel = zmk_battery_state_of_charge();
         struct led_rgb battery_rgb;
         
+        
         if (batteryChargeLevel <= 10) {
-            battery_rgb = (struct led_rgb){0, 255, 0};
+            battery_rgb = (struct led_rgb){0, 127, 0};
         } else if (batteryChargeLevel <= 20) {
-            battery_rgb = (struct led_rgb){25, 255, 25};
+            battery_rgb = (struct led_rgb){12, 127, 12};
         } else if (batteryChargeLevel <= 30) {
-            battery_rgb = (struct led_rgb){51, 255, 51};
+            battery_rgb = (struct led_rgb){25, 127, 25};
         } else if (batteryChargeLevel <= 40) {
-            battery_rgb = (struct led_rgb){76, 255, 76};
+            battery_rgb = (struct led_rgb){38, 127, 38};
         } else if (batteryChargeLevel <= 50) {
-            battery_rgb = (struct led_rgb){102, 255, 102};
+            battery_rgb = (struct led_rgb){51, 127, 51};
         } else if (batteryChargeLevel <= 60) {
-            battery_rgb = (struct led_rgb){127, 255, 127};
+            battery_rgb = (struct led_rgb){63, 127, 63};
         } else if (batteryChargeLevel <= 70) {
-            battery_rgb = (struct led_rgb){153, 255, 153};
+            battery_rgb = (struct led_rgb){76, 127, 76};
         } else if (batteryChargeLevel <= 80) {
-            battery_rgb = (struct led_rgb){178, 255, 178};
+            battery_rgb = (struct led_rgb){89, 127, 89};
         } else if (batteryChargeLevel <= 90) {
-            battery_rgb = (struct led_rgb){204, 255, 204};
+            battery_rgb = (struct led_rgb){102, 127, 102};
         } else {
-            battery_rgb = (struct led_rgb){255, 255, 255};
+            battery_rgb = (struct led_rgb){127, 127, 127};
         }
         
         for(int i = 0; i < STRIP_NUM_PIXELS; i++) {
