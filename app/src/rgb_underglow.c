@@ -280,19 +280,19 @@ static void zmk_rgb_underglow_effect_status() {
         if (batteryChargeLevel <= 12) {
             battery_rgb = (struct led_rgb){0, 255, 0};
         } else if (batteryChargeLevel <= 25) {
-            battery_rgb = (struct led_rgb){0, 224, 31};
+            battery_rgb = (struct led_rgb){31, 224, 0};
         } else if (batteryChargeLevel <= 38) {
-            battery_rgb = (struct led_rgb){0, 192, 63};
+            battery_rgb = (struct led_rgb){63, 192, 0};
         } else if (batteryChargeLevel <= 50) {
-            battery_rgb = (struct led_rgb){0, 160, 95};
+            battery_rgb = (struct led_rgb){95, 160, 0};
         } else if (batteryChargeLevel <= 63) {
-            battery_rgb = (struct led_rgb){0, 128, 127};
+            battery_rgb = (struct led_rgb){127, 128, 0};
         } else if (batteryChargeLevel <= 76) {
-            battery_rgb = (struct led_rgb){0, 96, 159};
+            battery_rgb = (struct led_rgb){159, 96, 0};
         } else if (batteryChargeLevel <= 89) {
-            battery_rgb = (struct led_rgb){0, 64, 191};
+            battery_rgb = (struct led_rgb){191, 64, 0};
         } else {
-            battery_rgb = (struct led_rgb){0, 0, 255};
+            battery_rgb = (struct led_rgb){255, 0, 0};
         }
         
         for(int i = 0; i < STRIP_NUM_PIXELS; i++) {
