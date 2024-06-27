@@ -90,9 +90,14 @@ static uint16_t hue_scale_to_range(uint16_t hue, uint16_t from_max, uint16_t to_
     if (to_min < 0) to_min = 0;
     if (to_max < 0) to_max = 0;
 
-    int hue_d = abs(to_max - to_min);
-    int direc = hue_d - abs(to_max - to_min - 1);
-    hue = (hue * hue_d / from_max) + (to_min * direc);
+    if (to_min <= to_max) {
+        // Normal scaling
+        hue = (hue * (to_max - to_min) / from_max) + to_min;
+    } else {
+        // Reversed scaling
+        hue = to_min - (hue * (to_min - to_max) / from_max);
+    }
+    
     return hue;
 }
 
