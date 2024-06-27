@@ -274,34 +274,17 @@ static void zmk_rgb_underglow_effect_status() {
 
     // ------- Turn on the battery status led -------
     #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY)
-        uint8_t batteryChargeLevel = zmk_battery_state_of_charge();
-        struct led_rgb battery_rgb;
-        
-        
-        if (batteryChargeLevel <= 10) {
-            battery_rgb = (struct led_rgb){0, 127, 0};
-        } else if (batteryChargeLevel <= 20) {
-            battery_rgb = (struct led_rgb){12, 127, 12};
-        } else if (batteryChargeLevel <= 30) {
-            battery_rgb = (struct led_rgb){25, 127, 25};
-        } else if (batteryChargeLevel <= 40) {
-            battery_rgb = (struct led_rgb){38, 127, 38};
-        } else if (batteryChargeLevel <= 50) {
-            battery_rgb = (struct led_rgb){51, 127, 51};
-        } else if (batteryChargeLevel <= 60) {
-            battery_rgb = (struct led_rgb){63, 127, 63};
-        } else if (batteryChargeLevel <= 70) {
-            battery_rgb = (struct led_rgb){76, 127, 76};
-        } else if (batteryChargeLevel <= 80) {
-            battery_rgb = (struct led_rgb){89, 127, 89};
-        } else if (batteryChargeLevel <= 90) {
-            battery_rgb = (struct led_rgb){102, 127, 102};
-        } else {
-            battery_rgb = (struct led_rgb){127, 127, 127};
-        }
-        
-        for(int i = 0; i < STRIP_NUM_PIXELS; i++) {
-            pixels[i] = battery_rgb;
+        struct zmk_led_hsb battery_hsb = state.color;
+        battery_hsb.h = hue_scale_to_range(
+            zmk_battery_state_of_charge(),
+            100,
+            CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_COLOR_MIN,
+            CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_COLOR_MAX
+        );
+        battery_hsb.b = zmk_battery_state_of_charge()
+
+        for(int i = 0; i<STRIP_NUM_PIXELS; i++) {
+          pixels[i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
         }
     #endif
 }
