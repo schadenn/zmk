@@ -281,7 +281,7 @@ static void zmk_rgb_underglow_effect_status() {
             CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_COLOR_MIN,
             CONFIG_ZMK_RGB_UNDERGLOW_STATUS_BATTERY_COLOR_MAX
         );
-        battery_hsb.b = zmk_battery_state_of_charge();
+        battery_hsb.b = CONFIG_ZMK_RGB_UNDERGLOW_BRT_MAX;
 
         for(int i = 0; i<STRIP_NUM_PIXELS; i++) {
           pixels[i] = hsb_to_rgb(hsb_scale_zero_max(battery_hsb));
